@@ -3,6 +3,7 @@
 This repository contains my hands-on SQL practice exercises using the **dvdrental** sample database in PostgreSQL.
 
 The structure and progression of queries follow the concepts covered in my blog series:  
+
 ➡️ [SQL Foundations Part 1: Understanding Basic Concepts](https://medium.com/@black_hat7781/sql-fundamentals-part-1-my-study-notes-4e50ab6453b7)
 
 ➡️ [SQL Foundations Part 2: Understanding INNER JOINs](https://medium.com/@black_hat7781/sql-foundations-part-2-understanding-inner-joins-7d38e24f82d3)
