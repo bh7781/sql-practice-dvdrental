@@ -1,14 +1,11 @@
 /*---------------------------------------------------------------
-  SQL PRACTICE  –  Topic 1: Core SELECT & Basic Filtering
-  Problem ID: DVDR-001
+DVDR-001: Core SELECT & Basic Filtering
+List the first name, last name, and email of every *active*
+customer who belongs to *store 1*.
+Sort the results alphabetically by last_name, then first_name.
 
-  Task:
-    List the first name, last name, and email of every *active*
-    customer who belongs to *store 1*.
-    Sort the results alphabetically by last_name, then first_name.
-
-  Table reference:
-    customer(first_name, last_name, email, active, store_id)
+Table reference:
+customer(first_name, last_name, email, active, store_id)
 ----------------------------------------------------------------*/
 
 SELECT first_name, last_name, email
@@ -17,40 +14,34 @@ WHERE store_id = 1 AND activebool IS TRUE
 ORDER BY last_name, first_name;
 
 /*---------------------------------------------------------------
-  Optimization Tip:
+Optimization Tip:
 
-  PostgreSQL allows multiple ways to write boolean conditions.
-
-  These are all equivalent and valid:
-
+PostgreSQL allows multiple ways to write boolean conditions.
+These are all equivalent and valid:
     activebool
     activebool = TRUE
     activebool IS TRUE
 
-  Similarly, for false conditions:
-
+Similarly, for false conditions:
     NOT activebool
     activebool = FALSE
     activebool IS FALSE
 
-  Prefer using the shortest form (e.g., "activebool" or "NOT activebool")
-  for readability and conciseness.
+Prefer using the shortest form (e.g., "activebool" or "NOT activebool")
+for readability and conciseness.
 ----------------------------------------------------------------*/
 
-/* ========================== NEXT QUERY ========================== */
+/* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-  SQL PRACTICE  –  Topic 1: Core SELECT & Basic Filtering
-  Problem ID: DVDR-002
+DVDR-002: Core SELECT & Basic Filtering
+Show the full name (first_name + last_name), email, and
+active status of all customers whose first name starts with 'A'.
 
-  Task:
-    Show the full name (first_name + last_name), email, and
-    active status of all customers whose first name starts with 'A'.
+Sort results by first name, then last name.
 
-    Sort results by first name, then last name.
-
-  Table reference:
-    dvdrental.customer(first_name, last_name, email, activebool)
+Table reference:
+dvdrental.customer(first_name, last_name, email, activebool)
 ----------------------------------------------------------------*/
 
 SELECT 
@@ -62,36 +53,32 @@ WHERE first_name LIKE 'A%'
 ORDER BY first_name, last_name;
 
 /*---------------------------------------------------------------
-  Query Notes & Optimization Tips:
+Notes:
+Why use single quotes with LIKE:
+	- In PostgreSQL, string values (like 'A%') must be enclosed in single quotes.
+	- Double quotes are reserved for *identifiers* like column or table names.
+	- Using "A%" causes an error because PostgreSQL looks for a column named A%.
 
-  💡 Why use single quotes with LIKE:
-     - In PostgreSQL, string values (like 'A%') must be enclosed in single quotes.
-     - Double quotes are reserved for *identifiers* like column or table names.
-     - Using "A%" causes an error because PostgreSQL looks for a column named A%.
+CONCAT vs ||:
+	- You can also concatenate strings using the `||` operator:
+	  Example: first_name || ' ' || last_name
+	- CONCAT() is more readable and consistent across dialects.
 
-  🧠 CONCAT vs ||:
-     - You can also concatenate strings using the `||` operator:
-       Example: first_name || ' ' || last_name
-     - CONCAT() is more readable and consistent across dialects.
-
-  ✅ Aliasing best practice:
-     - Use AS to rename columns in output, especially when transforming data.
+Aliasing best practice:
+	- Use AS to rename columns in output, especially when transforming data.
 ----------------------------------------------------------------*/
 
-/* ========================== NEXT QUERY ========================== */
+/* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-  SQL PRACTICE  –  Topic 1: DISTINCT
-  Problem ID: DVDR-003
+DVDR-003: DISTINCT
+Find all unique first names of customers who have an
+active account (activebool = true).
 
-  Task:
-    Find all unique first names of customers who have an
-    active account (activebool = true).
+Sort the names alphabetically.
 
-    Sort the names alphabetically.
-
-  Table reference:
-    dvdrental.customer(first_name, activebool)
+Table reference:
+dvdrental.customer(first_name, activebool)
 ----------------------------------------------------------------*/
 
 SELECT DISTINCT first_name
@@ -100,36 +87,33 @@ WHERE activebool
 ORDER BY first_name;
 
 /*---------------------------------------------------------------
-  Query Notes & Optimization Tips:
+Notes:
 
-  ⚠️ Remember:
-     DISTINCT applies to the entire row. If you select more than one column,
-     it will return distinct combinations of those columns.
+- Remember:
+	DISTINCT applies to the entire row. If you select more than one column,
+    it will return distinct combinations of those columns.
 
-     Example:
-       SELECT DISTINCT first_name, last_name ...
-     will only remove exact duplicates of both first and last name together.
+Example:
+	SELECT DISTINCT first_name, last_name ...
+will only remove exact duplicates of both first and last name together.
 
-  Always choose DISTINCT only when duplicates are expected and meaningful.
+Always choose DISTINCT only when duplicates are expected and meaningful.
 ----------------------------------------------------------------*/
 
-
+/* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-  SQL PRACTICE  –  Bonus Query: DISTINCT ON with Full Row
-  Problem ID: DVDR-B001
+DVDR-B001: Bonus Query: DISTINCT ON with Full Row
+Retrieve only one row per unique first_name from the customer table,
+but include all other customer details in the result.
 
-  Task:
-    Retrieve only one row per unique first_name from the customer table,
-    but include all other customer details in the result.
+Keep only the first matching record (based on customer_id),
+and filter for only active customers.
 
-    Keep only the first matching record (based on customer_id),
-    and filter for only active customers.
+Sort the result by first_name for readability.
 
-    Sort the result by first_name for readability.
-
-  Table reference:
-    dvdrental.customer(first_name, last_name, email, customer_id, activebool)
+Table reference:
+dvdrental.customer(first_name, last_name, email, customer_id, activebool)
 ----------------------------------------------------------------*/
 
 SELECT DISTINCT ON (first_name)
@@ -139,21 +123,375 @@ WHERE activebool
 ORDER BY first_name, customer_id;
 
 /*---------------------------------------------------------------
-  Query Notes & Optimization Tips:
+Notes:
 
-  ✅ DISTINCT ON (column) is a PostgreSQL-specific feature that
-     allows you to return only the first row for each unique value
-     in that column — based on ORDER BY.
+- DISTINCT ON (column) is a PostgreSQL-specific feature that
+	allows you to return only the first row for each unique value
+	in that column — based on ORDER BY.
 
-  ✅ ORDER BY determines which row "wins" for each group.
-     In this example, the row with the smallest customer_id per first_name is kept.
+- ORDER BY determines which row "wins" for each group.
+	In this example, the row with the smallest customer_id per first_name is kept.
 
-  ⚠️ Be careful when selecting other columns:
-     The non-DISTINCT columns come from whichever row PostgreSQL selects.
+- Be careful when selecting other columns:
+	The non-DISTINCT columns come from whichever row PostgreSQL selects.
 
-  🧠 This technique is great for "first per group" problems,
-     but for full portability across SQL dialects, consider using
-     ROW_NUMBER() with a window function — which we’ll cover later.
+- This technique is great for "first per group" problems,
+	but for full portability across SQL dialects, consider using
+	ROW_NUMBER() with a window function — which we’ll cover later.
+----------------------------------------------------------------*/
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-004 (LIMIT)
+Retrieve the first 10 customers from the customer table.
+Show first name, last name, email, and active status.
+
+Sort them alphabetically by last name, then first name.
+
+Table reference:
+dvdrental.customer(first_name, last_name, email, activebool)
+----------------------------------------------------------------*/
+
+SELECT first_name, last_name, email, activebool
+FROM dvdrental.customer
+ORDER BY last_name, first_name
+LIMIT 10;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-005: Aliasing Columns
+Show the full name (first_name + last_name) of all customers,
+and alias it as "customer_name".
+
+Also include their email, and show their active status as "is_active".
+
+Sort by customer_name alphabetically.
+
+Table reference:
+dvdrental.customer(first_name, last_name, email, activebool)
+----------------------------------------------------------------*/
+
+SELECT 
+	concat(first_name, ' ', last_name) AS customer_name,
+	email,
+	activebool AS is_active
+FROM dvdrental.customer
+ORDER BY customer_name;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-006: Basic Aggregation with COUNT
+Count how many customers are currently active (activebool = true).
+
+Return a single column and alias it as "active_customer_count".
+
+Table reference:
+dvdrental.customer(activebool)
+----------------------------------------------------------------*/
+
+SELECT count(*) AS active_customer_count
+FROM dvdrental.customer
+WHERE activebool;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-007: Grouping & HAVING
+From the rental table, list each customer_id and count how many times
+that customer has rented.
+
+Return these columns:
+    • customer_id
+    • rental_count – total rentals for each customer_id
+
+Show only customers who have rented more than 30 times.
+
+Sort the results by rental_count in descending order and, in case of
+tie, by customer_id ascending.
+
+Table reference:
+dvdrental.rental(rental_id, rental_date, inventory_id, customer_id)
 ----------------------------------------------------------------*/
 
 
+SELECT customer_id, count(*) AS rental_count
+FROM dvdrental.rental
+GROUP BY customer_id
+HAVING count(*) > 30
+ORDER BY rental_count DESC, customer_id;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-008: Using IN and ORDER BY
+From the payment table, list all payments made by staff members 
+with staff_id values 1 or 2.
+
+Return these columns:
+    • payment_id
+    • staff_id
+    • amount
+    • payment_date
+
+Sort the results by payment_date in descending order.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT payment_id, staff_id, amount, payment_date
+FROM dvdrental.payment
+WHERE staff_id IN (1, 2)
+ORDER BY payment_date DESC;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-009: Using BETWEEN and ORDER BY
+From the payment table, list all payments where the amount is 
+between 5 and 7 (inclusive).
+
+Return these columns:
+    • payment_id
+    • customer_id
+    • amount
+    • payment_date
+
+Sort the results by amount in ascending order and, for payments 
+with the same amount, sort by payment_date descending.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT payment_id, customer_id, amount, payment_date
+FROM dvdrental.payment
+WHERE amount between 5 AND 7
+ORDER BY amount, payment_date DESC;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-010: Handling NULL values
+From the customer table, list all customers who do not have an 
+email address (i.e., where email is NULL).
+
+Return these columns:
+    • customer_id
+    • first_name
+    • last_name
+    • email
+
+Sort the results by last_name ascending, then first_name ascending.
+
+Table reference:
+dvdrental.customer(customer_id, store_id, first_name, last_name, email, address_id, active, create_date, last_update)
+----------------------------------------------------------------*/
+
+SELECT customer_Id, first_name, last_name, email
+FROM dvdrental.customer
+WHERE email IS NULL
+ORDER BY last_name, first_name;
+
+-- 0 results returned
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-011: Handling NULL values
+From the address table, list all addresses where address2 is NULL.
+
+Return these columns:
+    • address_id
+    • address
+    • address2
+    • district
+    • postal_code
+
+Sort the results by district ascending, then address ascending.
+
+Table reference:
+dvdrental.address(address_id, address, address2, district, city_id, postal_code, phone, last_update)
+----------------------------------------------------------------*/
+
+SELECT address_id, address, address2, district, city_id, postal_code
+FROM dvdrental.address
+WHERE address2 IS NULL
+ORDER BY district, address;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-012: Using arithmetic in SELECT
+From the payment table, list each payment_id and amount, along with 
+a new column showing the amount increased by 10 percent.
+
+Return these columns:
+    • payment_id
+    • amount
+    • amount_with_increase – amount + (amount * 0.10)
+
+Sort the results by amount_with_increase in descending order.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT 
+	payment_id, 
+	amount, 
+	amount + (amount * 0.10) AS amount_with_increase
+FROM dvdrental.payment
+ORDER BY amount_with_increase DESC;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-013: Using ROUND with arithmetic
+From the payment table, list each payment_id and amount, along with 
+a new column showing the amount increased by 18 percent and rounded 
+to 2 decimal places.
+
+Return these columns:
+    • payment_id
+    • amount
+    • amount_with_tax – amount increased by 18 percent and rounded
+
+Sort the results by amount_with_tax in descending order.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT
+	payment_id,
+	amount,
+	round(amount + (amount * 0.18), 2) AS amount_with_tax
+FROM dvdrental.payment
+ORDER BY amount_with_tax DESC;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-014: Using ORDER BY with multiple columns and directions
+From the customer table, list all customers and sort the results 
+by active status in descending order, then by last_name in ascending 
+order, and finally by first_name in ascending order.
+
+Return these columns:
+    • customer_id
+    • first_name
+    • last_name
+    • active
+
+Table reference:
+dvdrental.customer(customer_id, store_id, first_name, last_name, email, address_id, active, create_date, last_update)
+----------------------------------------------------------------*/
+
+SELECT
+	customer_id,
+	first_name,
+	last_name,
+	active
+FROM dvdrental.customer
+ORDER BY 
+	active DESC,
+	last_name, first_name;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-015: Using LIMIT
+From the film table, list the first 7 films based on their title 
+in alphabetical order.
+
+Return these columns:
+    • film_id
+    • title
+    • release_year
+    • rental_rate
+
+Table reference:
+dvdrental.film(film_id, title, description, release_year, language_id, 
+original_language_id, rental_duration, rental_rate, length, replacement_cost, 
+rating, last_update, special_features, fulltext)
+----------------------------------------------------------------*/
+
+SELECT film_id, title, release_year, rental_rate
+FROM dvdrental.film
+ORDER BY title
+LIMIT 7;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-016: Using DISTINCT
+From the film table, list all unique rental durations available.
+
+Return these columns:
+    • rental_duration
+
+Sort the results in ascending order.
+
+Table reference:
+dvdrental.film(film_id, title, description, release_year, language_id, 
+original_language_id, rental_duration, rental_rate, length, replacement_cost, 
+rating, last_update, special_features, fulltext)
+----------------------------------------------------------------*/
+
+SELECT DISTINCT(rental_duration)
+FROM dvdrental.film
+ORDER BY rental_duration;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-017: Using DISTINCT ON
+From the customer table, retrieve only the first customer record 
+for each unique first_name, based on the lowest customer_id.
+
+Return these columns:
+    • first_name
+    • customer_id
+    • last_name
+    • email
+
+Sort the results by first_name ascending, then customer_id ascending.
+
+Table reference:
+dvdrental.customer(customer_id, store_id, first_name, last_name, email, 
+address_id, active, create_date, last_update)
+----------------------------------------------------------------*/
+
+SELECT
+	DISTINCT ON (first_name)
+	first_name,
+	customer_id,
+	last_name,
+	email
+FROM dvdrental.customer
+ORDER BY first_name, customer_id;
+
+/*---------------------------------------------------------------
+NOTE:
+DISTINCT ON is a PostgreSQL-specific feature used to return the first row
+for each unique value of one or more columns.
+
+Syntax:
+    SELECT DISTINCT ON (column_name) col1, col2, ...
+    FROM table
+    ORDER BY column_name, another_column;
+
+There is no comma after DISTINCT ON (column_name) because it is part of the
+SELECT clause itself, not a separate column.
+
+Other SQL dialects (like MySQL, SQL Server, Oracle) do not support DISTINCT ON.
+Instead, they achieve similar results using:
+    • ROW_NUMBER() window function inside a CTE or subquery
+    • GROUP BY with MIN/MAX and a join back to the table
+---------------------------------------------------------------*/
+
+SELECT version();
