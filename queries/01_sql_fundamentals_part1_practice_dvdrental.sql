@@ -495,3 +495,157 @@ Instead, they achieve similar results using:
 ---------------------------------------------------------------*/
 
 SELECT version();
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-018: GROUP BY with multiple columns
+From the payment table, group the data by staff_id and customer_id 
+and find the total amount paid by each customer for each staff member.
+
+Return these columns:
+    • staff_id
+    • customer_id
+    • total_amount – sum of amount for each staff-customer combination
+
+Sort the results by staff_id ascending, then total_amount descending.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT staff_id, customer_id, SUM(amount) AS total_amount
+FROM dvdrental.payment
+GROUP BY staff_id, customer_id
+ORDER BY staff_id, total_amount DESC;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-019: Using aggregate functions (AVG, MIN, MAX)
+From the payment table, find the minimum, maximum, and average payment 
+amounts for each staff member.
+
+Return these columns:
+    • staff_id
+    • min_amount – minimum payment amount
+    • max_amount – maximum payment amount
+    • avg_amount – average payment amount
+
+Sort the results by staff_id ascending.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT
+	staff_id,
+	MIN(amount) AS min_amount,
+	MAX(amount) AS max_amount,
+	ROUND(AVG(amount), 2) AS avg_amount
+FROM dvdrental.payment
+GROUP BY staff_id
+ORDER BY staff_id;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-020: Using HAVING with multiple conditions
+From the payment table, find each customer’s total payment amount 
+and total number of payments. Show only those customers who have 
+made more than 10 payments and whose total payment amount exceeds 100.
+
+Return these columns:
+    • customer_id
+    • total_amount – sum of amount
+    • total_payments – count of payments
+
+Sort the results by total_amount in descending order.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT
+	customer_id,
+	SUM(amount) AS total_amount,
+	COUNT(*) AS total_payments
+FROM dvdrental.payment
+GROUP BY customer_id
+HAVING 
+	COUNT(*) > 10
+	AND SUM(amount) > 100
+ORDER BY total_amount DESC;
+
+/* ================================================= NEXT QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-021: Creating and querying a VIEW
+Create a view named high_value_customers that shows each customer_id 
+and the total amount they have paid across all rentals. Then, query 
+the view to return only those customers who have paid more than 150.
+
+For the final result, return:
+    • customer_id
+    • total_amount
+
+Sort the results by total_amount in descending order.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+CREATE OR REPLACE VIEW dvdrental.high_value_customers AS
+SELECT
+	customer_id,
+	SUM(amount) AS total_amount
+FROM dvdrental.payment
+GROUP BY customer_id;
+
+SELECT customer_id, total_amount
+FROM dvdrental.high_value_customers
+WHERE total_amount > 150
+ORDER BY total_amount DESC;
+
+/* ================================================= FINAL QUERY ================================================= */
+
+/*---------------------------------------------------------------
+DVDR-FINAL: Combining multiple SQL concepts
+From the payment table, analyze payments processed by staff members 1 
+and 2, where payment amounts are between 5 and 10 (inclusive).
+
+Return the following:
+    • staff_id
+    • customer_id
+    • payment_count: number of payments made by each customer for each staff member
+    • total_amount: total payment amount
+    • avg_amount_rounded: average payment amount rounded to 2 decimals
+
+Only include results where payment_count is greater than 5 and total_amount is greater than 40.
+
+Sort the results by total_amount in descending order, then by customer_id.
+Limit the output to the top 10 rows.
+
+Table reference:
+dvdrental.payment(payment_id, customer_id, staff_id, rental_id, amount, payment_date)
+----------------------------------------------------------------*/
+
+SELECT 
+	staff_id,
+	customer_id,
+	COUNT(*) AS payment_count,
+	SUM(amount) AS total_amount,
+	ROUND(AVG(amount), 2) AS avg_amount_rounded
+FROM dvdrental.payment
+WHERE 
+	staff_id IN (1, 2)
+	AND amount BETWEEN 5 AND 10
+GROUP BY staff_id, customer_id
+HAVING 
+	COUNT(*) > 5
+	AND SUM(amount) > 40
+ORDER BY 
+	total_amount DESC,
+	customer_id
+LIMIT 10;
+
