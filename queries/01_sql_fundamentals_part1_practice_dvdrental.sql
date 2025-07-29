@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------
-DVDR-001: Core SELECT & Basic Filtering
+DVDR-P1-001: Core SELECT & Basic Filtering
 List the first name, last name, and email of every *active*
 customer who belongs to *store 1*.
 Sort the results alphabetically by last_name, then first_name.
@@ -34,7 +34,7 @@ for readability and conciseness.
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-002: Core SELECT & Basic Filtering
+DVDR-P1-002: Core SELECT & Basic Filtering
 Show the full name (first_name + last_name), email, and
 active status of all customers whose first name starts with 'A'.
 
@@ -71,7 +71,7 @@ Aliasing best practice:
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-003: DISTINCT
+DVDR-P1-003: DISTINCT
 Find all unique first names of customers who have an
 active account (activebool = true).
 
@@ -103,7 +103,7 @@ Always choose DISTINCT only when duplicates are expected and meaningful.
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-B001: Bonus Query: DISTINCT ON with Full Row
+DVDR-P1-B001: Bonus Query: DISTINCT ON with Full Row
 Retrieve only one row per unique first_name from the customer table,
 but include all other customer details in the result.
 
@@ -143,7 +143,7 @@ Notes:
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-004 (LIMIT)
+DVDR-P1-004 (LIMIT)
 Retrieve the first 10 customers from the customer table.
 Show first name, last name, email, and active status.
 
@@ -161,7 +161,7 @@ LIMIT 10;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-005: Aliasing Columns
+DVDR-P1-005: Aliasing Columns
 Show the full name (first_name + last_name) of all customers,
 and alias it as "customer_name".
 
@@ -183,7 +183,7 @@ ORDER BY customer_name;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-006: Basic Aggregation with COUNT
+DVDR-P1-006: Basic Aggregation with COUNT
 Count how many customers are currently active (activebool = true).
 
 Return a single column and alias it as "active_customer_count".
@@ -199,7 +199,7 @@ WHERE activebool;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-007: Grouping & HAVING
+DVDR-P1-007: Grouping & HAVING
 From the rental table, list each customer_id and count how many times
 that customer has rented.
 
@@ -226,7 +226,7 @@ ORDER BY rental_count DESC, customer_id;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-008: Using IN and ORDER BY
+DVDR-P1-008: Using IN and ORDER BY
 From the payment table, list all payments made by staff members 
 with staff_id values 1 or 2.
 
@@ -250,7 +250,7 @@ ORDER BY payment_date DESC;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-009: Using BETWEEN and ORDER BY
+DVDR-P1-009: Using BETWEEN and ORDER BY
 From the payment table, list all payments where the amount is 
 between 5 and 7 (inclusive).
 
@@ -275,7 +275,7 @@ ORDER BY amount, payment_date DESC;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-010: Handling NULL values
+DVDR-P1-010: Handling NULL values
 From the customer table, list all customers who do not have an 
 email address (i.e., where email is NULL).
 
@@ -301,7 +301,7 @@ ORDER BY last_name, first_name;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-011: Handling NULL values
+DVDR-P1-011: Handling NULL values
 From the address table, list all addresses where address2 is NULL.
 
 Return these columns:
@@ -325,7 +325,7 @@ ORDER BY district, address;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-012: Using arithmetic in SELECT
+DVDR-P1-012: Using arithmetic in SELECT
 From the payment table, list each payment_id and amount, along with 
 a new column showing the amount increased by 10 percent.
 
@@ -350,7 +350,7 @@ ORDER BY amount_with_increase DESC;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-013: Using ROUND with arithmetic
+DVDR-P1-013: Using ROUND with arithmetic
 From the payment table, list each payment_id and amount, along with 
 a new column showing the amount increased by 18 percent and rounded 
 to 2 decimal places.
@@ -376,7 +376,7 @@ ORDER BY amount_with_tax DESC;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-014: Using ORDER BY with multiple columns and directions
+DVDR-P1-014: Using ORDER BY with multiple columns and directions
 From the customer table, list all customers and sort the results 
 by active status in descending order, then by last_name in ascending 
 order, and finally by first_name in ascending order.
@@ -404,7 +404,7 @@ ORDER BY
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-015: Using LIMIT
+DVDR-P1-015: Using LIMIT
 From the film table, list the first 7 films based on their title 
 in alphabetical order.
 
@@ -428,7 +428,7 @@ LIMIT 7;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-016: Using DISTINCT
+DVDR-P1-016: Using DISTINCT
 From the film table, list all unique rental durations available.
 
 Return these columns:
@@ -449,7 +449,7 @@ ORDER BY rental_duration;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-017: Using DISTINCT ON
+DVDR-P1-017: Using DISTINCT ON
 From the customer table, retrieve only the first customer record 
 for each unique first_name, based on the lowest customer_id.
 
@@ -499,7 +499,7 @@ SELECT version();
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-018: GROUP BY with multiple columns
+DVDR-P1-018: GROUP BY with multiple columns
 From the payment table, group the data by staff_id and customer_id 
 and find the total amount paid by each customer for each staff member.
 
@@ -522,7 +522,7 @@ ORDER BY staff_id, total_amount DESC;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-019: Using aggregate functions (AVG, MIN, MAX)
+DVDR-P1-019: Using aggregate functions (AVG, MIN, MAX)
 From the payment table, find the minimum, maximum, and average payment 
 amounts for each staff member.
 
@@ -550,7 +550,7 @@ ORDER BY staff_id;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-020: Using HAVING with multiple conditions
+DVDR-P1-020: Using HAVING with multiple conditions
 From the payment table, find each customer’s total payment amount 
 and total number of payments. Show only those customers who have 
 made more than 10 payments and whose total payment amount exceeds 100.
@@ -580,7 +580,7 @@ ORDER BY total_amount DESC;
 /* ================================================= NEXT QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-021: Creating and querying a VIEW
+DVDR-P1-021: Creating and querying a VIEW
 Create a view named high_value_customers that shows each customer_id 
 and the total amount they have paid across all rentals. Then, query 
 the view to return only those customers who have paid more than 150.
@@ -610,7 +610,7 @@ ORDER BY total_amount DESC;
 /* ================================================= FINAL QUERY ================================================= */
 
 /*---------------------------------------------------------------
-DVDR-FINAL: Combining multiple SQL concepts
+DVDR-P1-FINAL: Combining multiple SQL concepts
 From the payment table, analyze payments processed by staff members 1 
 and 2, where payment amounts are between 5 and 10 (inclusive).
 
@@ -648,4 +648,3 @@ ORDER BY
 	total_amount DESC,
 	customer_id
 LIMIT 10;
-
